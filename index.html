@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/img/Spiritsapplogo.png">
 <link rel="apple-touch-icon" href="assets/img/Spiritsapplogo.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <section class="hero">
@@ -80,14 +80,15 @@
 
 <footer class="footer">
   <button id="resetBtn" class="btn-reset">Reiniciar progreso</button>
-  <span class="footer-note">Los datos se guardan solo en este dispositivo</span>
+  <span class="footer-note">Tu progreso se guarda en tu nombre de jugador</span>
 </footer>
 
 <div id="toast" class="toast"></div>
 
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script type="module" src="firebase-init.js?v=2"></script>
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>

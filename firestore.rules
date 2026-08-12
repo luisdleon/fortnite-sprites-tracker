@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// Reglas para el tracker de Espíritus.
+// El "login" es solo por nombre de jugador (sin contraseña), así que la
+// colección es pública a propósito. Para evitar abusos se limita a:
+//   - únicamente esta colección
+//   - únicamente los campos esperados
+//   - un tamaño máximo razonable por documento
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /spiritsTrackerUsers/{userId} {
+      allow read: if true;
+
+      allow write: if request.resource.data.keys().hasOnly(['owned', 'mastered', 'updatedAt'])
+                   && request.resource.data.owned is list
+                   && request.resource.data.mastered is list
+                   && request.resource.data.owned.size() <= 300
+                   && request.resource.data.mastered.size() <= 300
+                   && userId.size() <= 60;
+    }
+  }
+}

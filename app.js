@@ -61,6 +61,26 @@
     localStorage.setItem(key, JSON.stringify(Array.from(set)));
   }
 
+  // ---- Sincronización con la nube ----
+  let cloudSaveTimer = null;
+
+  function scheduleCloudSave() {
+    const username = localStorage.getItem(USERNAME_KEY);
+    if (!username || !window.FirebaseSync) return;
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(() => {
+      window.FirebaseSync
+        .saveUserData(username, {
+          owned: Array.from(owned),
+          mastered: Array.from(mastered),
+        })
+        .catch((err) => {
+          console.error("No se pudo guardar en la nube", err);
+          showToast("Sin conexión: guardado solo en este dispositivo");
+        });
+    }, 800);
+  }
+
   function toggleOwned(id) {
     if (owned.has(id)) {
       owned.delete(id);
@@ -69,6 +89,7 @@
     }
     saveSet(STORAGE_KEY, owned);
     updateProgress();
+    scheduleCloudSave();
   }
 
   function toggleMastered(id) {
@@ -81,6 +102,7 @@
     }
     saveSet(MASTERED_KEY, mastered);
     updateProgress();
+    scheduleCloudSave();
   }
 
   function updateProgress() {
@@ -251,31 +273,83 @@
       mastered.clear();
       saveSet(STORAGE_KEY, owned);
       saveSet(MASTERED_KEY, mastered);
-      grid.querySelectorAll(".card").forEach((card) => {
-        card.classList.remove("owned", "mastered");
-        const mb = card.querySelector(".mastered-toggle");
-        const ob = card.querySelector(".owned-toggle");
-        if (mb) {
-          mb.classList.remove("active");
-          mb.setAttribute("aria-pressed", "false");
-        }
-        if (ob) {
-          ob.classList.remove("active");
-          ob.setAttribute("aria-pressed", "false");
-        }
-      });
+      refreshCardStates();
       updateProgress();
       applyFilters();
+      scheduleCloudSave();
       showToast("Progreso reiniciado");
     });
 
     exportBtn.addEventListener("click", exportAsJpg);
   }
 
+  function whenFirebaseReady() {
+    if (window.FirebaseSync) return Promise.resolve();
+    return new Promise((resolve) => {
+      window.addEventListener("firebase-sync-ready", () => resolve(), {
+        once: true,
+      });
+      setTimeout(resolve, 6000); // no bloquear si la nube no carga
+    });
+  }
+
+  // Trae el progreso guardado en la nube para ese nombre y lo aplica a la UI.
+  // Si el usuario es nuevo en la nube, sube el progreso local como punto de partida.
+  async function syncWithCloud(name) {
+    await whenFirebaseReady();
+    if (!window.FirebaseSync) return;
+
+    try {
+      const remote = await window.FirebaseSync.loadUserData(name);
+      if (remote) {
+        owned = new Set(remote.owned);
+        mastered = new Set(remote.mastered);
+        saveSet(STORAGE_KEY, owned);
+        saveSet(MASTERED_KEY, mastered);
+        refreshCardStates();
+        updateProgress();
+        applyFilters();
+        showToast(`Progreso de ${name} cargado`);
+      } else {
+        await window.FirebaseSync.saveUserData(name, {
+          owned: Array.from(owned),
+          mastered: Array.from(mastered),
+        });
+        showToast(`Cuenta creada para ${name}`);
+      }
+    } catch (err) {
+      console.error("No se pudo sincronizar con la nube", err);
+      showToast("Sin conexión: usando datos de este dispositivo");
+    }
+  }
+
+  // Repinta el estado de todas las cards desde los sets actuales
+  function refreshCardStates() {
+    grid.querySelectorAll(".card").forEach((card) => {
+      const id = card.dataset.id;
+      const isOwned = owned.has(id);
+      const isMastered = mastered.has(id);
+      card.classList.toggle("owned", isOwned);
+      card.classList.toggle("mastered", isMastered);
+
+      const ob = card.querySelector(".owned-toggle");
+      const mb = card.querySelector(".mastered-toggle");
+      if (ob) {
+        ob.classList.toggle("active", isOwned);
+        ob.setAttribute("aria-pressed", isOwned ? "true" : "false");
+      }
+      if (mb) {
+        mb.classList.toggle("active", isMastered);
+        mb.setAttribute("aria-pressed", isMastered ? "true" : "false");
+      }
+    });
+  }
+
   function setupUser() {
     const saved = localStorage.getItem(USERNAME_KEY);
     if (saved) {
       showGreeting(saved);
+      syncWithCloud(saved);
     } else {
       showUserForm();
     }
@@ -286,6 +360,7 @@
       if (!name) return;
       localStorage.setItem(USERNAME_KEY, name);
       showGreeting(name);
+      syncWithCloud(name);
     });
 
     editUserBtn.addEventListener("click", () => {
