@@ -360,18 +360,19 @@
       const ctx = canvas.getContext("2d");
       const cx = canvas.width / 2;
 
-      const [heroBgImg, ...images] = await Promise.all([
-        loadImage("assets/img/hero-bg.webp"),
+      const [heroBgImg, crownImg, ...images] = await Promise.all([
+        loadImage("assets/img/export-bg.webp"),
+        loadImage("assets/img/crown.png"),
         ...SPRITES.map((s) => loadImage(s.icon)),
       ]);
       await document.fonts.ready;
 
-      // Background photo + dark overlay
+      // Background image + light dark overlay for legibility
       if (heroBgImg) drawCoverImage(ctx, heroBgImg, canvas.width, canvas.height);
       const overlay = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      overlay.addColorStop(0, "rgba(6,7,12,0.6)");
-      overlay.addColorStop(0.3, "rgba(7,8,14,0.78)");
-      overlay.addColorStop(1, "rgba(7,8,14,0.9)");
+      overlay.addColorStop(0, "rgba(6,7,12,0.25)");
+      overlay.addColorStop(0.3, "rgba(7,8,14,0.35)");
+      overlay.addColorStop(1, "rgba(7,8,14,0.5)");
       ctx.fillStyle = overlay;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -434,21 +435,21 @@
         ctx.fillStyle = RARITY_COLOR[sprite.rarity] || "#9095b0";
         ctx.fill();
 
-        // Mastered star badge (top-left of icon)
+        // Mastered crown badge (top-left of icon)
         if (isMastered) {
           const starX = iconX + 2;
           const starY = iconY + 2;
           ctx.beginPath();
           ctx.arc(starX, starY, 9, 0, Math.PI * 2);
-          ctx.fillStyle = "#f5c518";
+          ctx.fillStyle = "rgba(20,23,38,0.92)";
           ctx.fill();
-          ctx.font = "bold 10px 'Fortnite', -apple-system, Arial, sans-serif";
-          ctx.fillStyle = "#2a1f00";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("★", starX, starY + 1);
-          ctx.textBaseline = "top";
-          ctx.textAlign = "left";
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = "#f5c518";
+          ctx.stroke();
+          if (crownImg) {
+            const crownSize = 12;
+            ctx.drawImage(crownImg, starX - crownSize / 2, starY - crownSize / 2, crownSize, crownSize);
+          }
         }
 
         // Checkbox below icon
