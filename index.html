@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d16">
+<title>Espíritus Fortnite · Tracker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/img/icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <img src="assets/img/fortnite-logo-transparent.png" alt="Fortnite" class="hero-logo">
+    <div class="hero-subtitle">ESPÍRITUS · TRACKER</div>
+
+    <div id="userSection" class="user-section">
+      <form id="userForm" class="user-form">
+        <input id="usernameInput" type="text" placeholder="Tu nombre de jugador..." maxlength="24" autocomplete="off">
+        <button type="submit" class="btn-user-save">Guardar</button>
+      </form>
+      <div id="userGreeting" class="user-greeting hidden">
+        <span class="user-greeting-text">Hola, <strong id="userNameDisplay"></strong></span>
+        <button id="editUserBtn" class="btn-user-edit" title="Cambiar nombre">✏️</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<header class="topbar">
+  <div class="topbar-title">
+    <h1>Espíritus</h1>
+  </div>
+  <button id="exportBtn" class="btn-export" title="Compartir lista como imagen">
+    <span class="label">Comparte</span>
+  </button>
+</header>
+
+<section class="progress-panel">
+  <div class="progress-stats">
+    <div class="stat">
+      <span id="ownedCount">0</span> / <span id="totalCount">117</span>
+      <small>Conseguidos</small>
+    </div>
+    <div class="progress-bar">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div class="stat stat-mastered">
+      <span id="masteredCount">0</span> / <span id="totalCountMastered">117</span>
+      <small>Dominados</small>
+    </div>
+    <div class="progress-bar">
+      <div id="progressFillMastered" class="progress-fill progress-fill-mastered"></div>
+    </div>
+  </div>
+</section>
+
+<section class="controls">
+  <input id="searchInput" type="search" placeholder="Buscar espíritu..." autocomplete="off">
+  <div class="dropdown-row">
+    <select id="rarityFilter" class="dropdown"></select>
+    <select id="masteredFilter" class="dropdown">
+      <option value="">Dominado: Todos</option>
+      <option value="yes">Solo dominados</option>
+      <option value="no">Solo no dominados</option>
+    </select>
+  </div>
+  <div class="toggle-row">
+    <button id="showAllBtn" class="chip active" data-mode="all">Todos</button>
+    <button id="showOwnedBtn" class="chip" data-mode="owned">Conseguidos</button>
+    <button id="showMissingBtn" class="chip" data-mode="missing">Faltantes</button>
+  </div>
+</section>
+
+<main id="grid" class="grid"></main>
+
+<footer class="footer">
+  <button id="resetBtn" class="btn-reset">Reiniciar progreso</button>
+  <span class="footer-note">Los datos se guardan solo en este dispositivo</span>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<canvas id="exportCanvas" style="display:none;"></canvas>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

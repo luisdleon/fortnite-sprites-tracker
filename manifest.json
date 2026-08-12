@@ -1,0 +1,11 @@
+{
+  "name": "Espíritus Fortnite - Tracker",
+  "short_name": "Espíritus",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b0d16",
+  "theme_color": "#0b0d16",
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
