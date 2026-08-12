@@ -34,6 +34,7 @@
   const exportBtn = document.getElementById("exportBtn");
   const resetBtn = document.getElementById("resetBtn");
 
+  const pageTitle = document.getElementById("pageTitle");
   const userForm = document.getElementById("userForm");
   const usernameInput = document.getElementById("usernameInput");
   const userGreeting = document.getElementById("userGreeting");
@@ -136,12 +137,15 @@
         </div>
         <div class="name">${sprite.name}</div>
         <div class="card-actions">
-          <button class="action-btn mastered-toggle${isMastered ? " active" : ""}" aria-pressed="${isMastered ? "true" : "false"}" title="Marcar como dominado">★ Dominado</button>
           <button class="action-btn owned-toggle${isOwned ? " active" : ""}" aria-pressed="${isOwned ? "true" : "false"}" title="Marcar como obtenido">Obtenido</button>
+          <button class="mastered-toggle${isMastered ? " active" : ""}" aria-pressed="${isMastered ? "true" : "false"}" title="Marcar como dominado">
+            <img src="assets/img/crown.png" alt="Dominado" class="crown-icon">
+          </button>
         </div>
       `;
 
       const iconWrap = card.querySelector(".icon-wrap");
+      const img = iconWrap.querySelector("img");
       const masteredBtn = card.querySelector(".mastered-toggle");
       const ownedBtn = card.querySelector(".owned-toggle");
 
@@ -150,7 +154,7 @@
         const isNowOwned = card.classList.toggle("owned");
         ownedBtn.classList.toggle("active", isNowOwned);
         ownedBtn.setAttribute("aria-pressed", isNowOwned ? "true" : "false");
-        triggerBounce(iconWrap);
+        triggerBounce(img);
         applyFilters();
       }
 
@@ -171,7 +175,7 @@
           ownedBtn.classList.add("active");
           ownedBtn.setAttribute("aria-pressed", "true");
         }
-        triggerBounce(iconWrap);
+        triggerBounce(img);
         applyFilters();
       });
 
@@ -295,6 +299,7 @@
     userNameDisplay.textContent = name;
     userGreeting.classList.remove("hidden");
     userForm.classList.add("hidden");
+    pageTitle.textContent = `Espíritus de ${name}`;
   }
 
   function showUserForm() {

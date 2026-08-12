@@ -30,6 +30,10 @@
 
 * { box-sizing: border-box; }
 
+button, select, input, textarea {
+  font-family: inherit;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -213,8 +217,8 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #0b0d16;
+  background: linear-gradient(135deg, #ffe066, var(--gold));
+  color: #2a1f00;
   border: none;
   border-radius: 999px;
   padding: 10px 14px;
@@ -402,11 +406,11 @@ body {
   cursor: pointer;
 }
 
-.card[data-rarity="MYTHIC"] .icon-wrap { background: linear-gradient(180deg, rgba(242,103,141,0.55), rgba(242,103,141,0.06) 65%, transparent 100%); }
-.card[data-rarity="LEGENDARY"] .icon-wrap { background: linear-gradient(180deg, rgba(255,159,69,0.5), rgba(255,159,69,0.06) 65%, transparent 100%); }
-.card[data-rarity="EPIC"] .icon-wrap { background: linear-gradient(180deg, rgba(184,102,255,0.5), rgba(184,102,255,0.06) 65%, transparent 100%); }
-.card[data-rarity="RARE"] .icon-wrap { background: linear-gradient(180deg, rgba(77,163,255,0.5), rgba(77,163,255,0.06) 65%, transparent 100%); }
-.card[data-rarity="SPECIAL"] .icon-wrap { background: linear-gradient(180deg, rgba(255,212,71,0.5), rgba(255,212,71,0.06) 65%, transparent 100%); }
+.card[data-rarity="MYTHIC"] .icon-wrap { background: linear-gradient(180deg, rgba(242,103,141,0.55), rgba(242,103,141,0) 75%); }
+.card[data-rarity="LEGENDARY"] .icon-wrap { background: linear-gradient(180deg, rgba(255,159,69,0.5), rgba(255,159,69,0) 75%); }
+.card[data-rarity="EPIC"] .icon-wrap { background: linear-gradient(180deg, rgba(184,102,255,0.5), rgba(184,102,255,0) 75%); }
+.card[data-rarity="RARE"] .icon-wrap { background: linear-gradient(180deg, rgba(77,163,255,0.5), rgba(77,163,255,0) 75%); }
+.card[data-rarity="SPECIAL"] .icon-wrap { background: linear-gradient(180deg, rgba(255,212,71,0.5), rgba(255,212,71,0) 75%); }
 
 @keyframes growBounce {
   0% { transform: scale(1); }
@@ -414,10 +418,6 @@ body {
   55% { transform: scale(0.9); }
   75% { transform: scale(1.1); }
   100% { transform: scale(1); }
-}
-
-.card .icon-wrap.bounce {
-  animation: growBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .card img {
@@ -428,18 +428,22 @@ body {
   transition: filter 0.15s ease;
 }
 
+.card img.bounce {
+  animation: growBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .card.owned img {
   filter: none;
 }
 
 .card .name {
-  font-size: 20px;
+  font-size: 25px;
   text-align: center;
   padding: 4px 8px 0;
-  line-height: 1.2;
+  line-height: 1.15;
   color: var(--text);
   font-weight: 400;
-  min-height: 48px;
+  min-height: 58px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -450,25 +454,25 @@ body {
 
 .card-actions {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   width: 100%;
-  padding: 8px 8px 10px;
+  padding: 8px 10px 12px;
   margin-top: auto;
 }
 
-.action-btn {
+.action-btn.owned-toggle {
   flex: 1;
   min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 7px 4px;
+  padding: 9px 8px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: rgba(255,255,255,0.04);
   color: var(--text-dim);
-  font-size: 10.5px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -477,7 +481,7 @@ body {
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
 
-.action-btn:active { transform: scale(0.94); }
+.action-btn.owned-toggle:active { transform: scale(0.94); }
 
 .action-btn.owned-toggle.active {
   background: var(--green);
@@ -485,10 +489,37 @@ body {
   color: #06210f;
 }
 
-.action-btn.mastered-toggle.active {
-  background: linear-gradient(135deg, var(--gold), var(--legendary));
+.mastered-toggle {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.mastered-toggle:active { transform: scale(0.9); }
+
+.mastered-toggle .crown-icon {
+  width: 20px;
+  height: 20px;
+  filter: grayscale(1) brightness(0.75);
+  transition: filter 0.15s ease;
+}
+
+.mastered-toggle.active {
+  background: rgba(245, 197, 24, 0.16);
   border-color: var(--gold);
-  color: #2a1f00;
+}
+
+.mastered-toggle.active .crown-icon {
+  filter: none;
 }
 
 .footer {
