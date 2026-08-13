@@ -351,14 +351,11 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  padding: 12px 16px 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 12px 20px;
 }
 
-@media (min-width: 480px) {
-  .grid { grid-template-columns: repeat(3, 1fr); }
-}
 @media (min-width: 700px) {
   .grid { grid-template-columns: repeat(5, 1fr); }
 }
@@ -439,11 +436,12 @@ body {
 .card .name {
   font-size: 25px;
   text-align: center;
-  padding: 4px 8px 0;
-  line-height: 1.15;
+  padding: 4px 4px 0;
+  line-height: 1.05;
   color: var(--text);
   font-weight: 400;
-  min-height: 58px;
+  min-height: 56px;
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -455,9 +453,9 @@ body {
 .card-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   width: 100%;
-  padding: 8px 10px 12px;
+  padding: 6px 6px 8px;
   margin-top: auto;
 }
 
@@ -467,12 +465,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 8px;
+  padding: 8px 4px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: rgba(255,255,255,0.04);
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -491,8 +489,8 @@ body {
 
 .mastered-toggle {
   flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: rgba(255,255,255,0.04);
@@ -507,8 +505,8 @@ body {
 .mastered-toggle:active { transform: scale(0.9); }
 
 .mastered-toggle .crown-icon {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   filter: grayscale(1) brightness(0.75);
   transition: filter 0.15s ease;
 }
@@ -585,4 +583,287 @@ body {
   color: var(--text-dim);
   padding: 40px 20px;
   font-size: 14px;
+}
+
+/* ---------- Avatar en topbar ---------- */
+
+.avatar-btn {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg-elevated);
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.avatar-btn:active { transform: scale(0.93); }
+.avatar-btn:hover { border-color: var(--accent); }
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.avatar-placeholder {
+  font-size: 20px;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+/* ---------- Tabs ---------- */
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0b0d16;
+}
+
+/* ---------- Amigos / intercambios ---------- */
+
+.friends-panel {
+  padding: 14px 16px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.friend-form {
+  display: flex;
+  gap: 8px;
+}
+
+#friendInput {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+#friendInput:focus { border-color: var(--accent); }
+
+.friends-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.friend-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.friend-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0b0d16;
+}
+
+.friend-chip img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(0,0,0,0.35);
+}
+
+.friend-chip .friend-initial {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.trade-area { padding-top: 6px; }
+
+.trade-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 16px 10px;
+}
+
+.trade-with { font-size: 15px; color: var(--text); }
+
+.btn-remove-friend {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.trade-tabs { padding: 0 16px; }
+
+.trade-hint {
+  margin: 10px 16px 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+
+/* En intercambios las cards son de solo lectura */
+.trade-grid .card .icon-wrap { cursor: default; }
+
+.trade-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  background: rgba(20,23,38,0.9);
+  border: 1.5px solid var(--border);
+}
+
+.trade-badge img { width: 13px; height: 13px; }
+
+/* ---------- Modal de foto de perfil ---------- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(4,5,10,0.75);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 600px) {
+  .modal { align-items: center; padding: 20px; }
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 560px;
+  max-height: 82vh;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 18px 18px 0 0;
+  padding: 16px 16px calc(16px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 600px) {
+  .modal-card { border-radius: 18px; }
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.btn-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+#avatarSearch {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 120px;
+}
+
+.avatar-option {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  padding: 4px;
+  cursor: pointer;
+}
+
+.avatar-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.avatar-option.selected {
+  border-color: var(--gold);
+  background: rgba(245,197,24,0.12);
 }

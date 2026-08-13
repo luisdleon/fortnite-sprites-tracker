@@ -4,6 +4,17 @@
   const STORAGE_KEY = "fortniteSpiritsOwned";
   const MASTERED_KEY = "fortniteSpiritsMastered";
   const USERNAME_KEY = "fortniteSpiritsUsername";
+  const AVATAR_KEY = "fortniteSpiritsAvatar";
+  const FRIENDS_KEY = "fortniteSpiritsFriends";
+  const VARIANT_PREFIXES = [
+    "Cube ",
+    "Gold ",
+    "Quack ",
+    "Gummy ",
+    "Galaxy ",
+    "Gem ",
+    "Holofoil ",
+  ];
   const RARITY_ORDER = ["MYTHIC", "LEGENDARY", "EPIC", "RARE", "SPECIAL"];
   const RARITY_LABEL_ES = {
     MYTHIC: "Mítico",
@@ -41,12 +52,86 @@
   const userNameDisplay = document.getElementById("userNameDisplay");
   const editUserBtn = document.getElementById("editUserBtn");
 
+  const avatarBtn = document.getElementById("avatarBtn");
+  const avatarImg = document.getElementById("avatarImg");
+  const avatarPlaceholder = document.getElementById("avatarPlaceholder");
+  const avatarModal = document.getElementById("avatarModal");
+  const avatarGrid = document.getElementById("avatarGrid");
+  const avatarSearch = document.getElementById("avatarSearch");
+  const avatarCloseBtn = document.getElementById("avatarCloseBtn");
+  const avatarRemoveBtn = document.getElementById("avatarRemoveBtn");
+
+  const viewMine = document.getElementById("viewMine");
+  const viewFriends = document.getElementById("viewFriends");
+  const addFriendForm = document.getElementById("addFriendForm");
+  const friendInput = document.getElementById("friendInput");
+  const friendsListEl = document.getElementById("friendsList");
+  const friendsEmpty = document.getElementById("friendsEmpty");
+  const tradeArea = document.getElementById("tradeArea");
+  const tradeFriendName = document.getElementById("tradeFriendName");
+  const removeFriendBtn = document.getElementById("removeFriendBtn");
+  const tradeGrid = document.getElementById("tradeGrid");
+  const tradeHint = document.getElementById("tradeHint");
+  const countGive = document.getElementById("countGive");
+  const countGet = document.getElementById("countGet");
+  const countHis = document.getElementById("countHis");
+
+  const SPRITE_BY_ID = new Map(SPRITES.map((s) => [s.id, s]));
+
   let owned = loadSet(STORAGE_KEY);
   let mastered = loadSet(MASTERED_KEY);
+  let avatarId = localStorage.getItem(AVATAR_KEY) || "";
+  let friends = loadFriends();
   let activeMode = "all"; // all | owned | missing
   let activeRarity = null; // null = todas
   let activeMastered = ""; // "" | yes | no
   let searchTerm = "";
+
+  // Amigos: cache de datos traidos de la nube { usuario: {owned:Set, mastered:Set, avatar} }
+  const friendCache = new Map();
+  let activeFriend = null;
+  let tradeMode = "give"; // give | get | his
+
+  function loadFriends() {
+    try {
+      const raw = localStorage.getItem(FRIENDS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveFriends() {
+    localStorage.setItem(FRIENDS_KEY, JSON.stringify(friends));
+  }
+
+  // Agrupa los 117 espiritus en sus 25 familias (base + variantes)
+  function buildGroups() {
+    const groups = [];
+    const byBase = new Map();
+    SPRITES.forEach((sprite) => {
+      let baseName = sprite.name;
+      let variant = null;
+      for (const p of VARIANT_PREFIXES) {
+        if (sprite.name.startsWith(p)) {
+          baseName = sprite.name.slice(p.length);
+          variant = p.trim();
+          break;
+        }
+      }
+      let g = byBase.get(baseName);
+      if (!g) {
+        g = { baseName, base: null, variants: [] };
+        byBase.set(baseName, g);
+        groups.push(g);
+      }
+      if (variant === null) g.base = sprite;
+      else g.variants.push({ variant, sprite });
+    });
+    return groups;
+  }
+
+  const SPRITE_GROUPS = buildGroups();
 
   function loadSet(key) {
     try {
@@ -73,6 +158,9 @@
         .saveUserData(username, {
           owned: Array.from(owned),
           mastered: Array.from(mastered),
+          avatar: avatarId,
+          friends: friends,
+          displayName: username,
         })
         .catch((err) => {
           console.error("No se pudo guardar en la nube", err);
@@ -304,16 +392,25 @@
       if (remote) {
         owned = new Set(remote.owned);
         mastered = new Set(remote.mastered);
+        avatarId = remote.avatar || "";
+        friends = remote.friends || [];
         saveSet(STORAGE_KEY, owned);
         saveSet(MASTERED_KEY, mastered);
+        localStorage.setItem(AVATAR_KEY, avatarId);
+        saveFriends();
         refreshCardStates();
         updateProgress();
         applyFilters();
+        renderAvatar();
+        renderFriendsList();
         showToast(`Progreso de ${name} cargado`);
       } else {
         await window.FirebaseSync.saveUserData(name, {
           owned: Array.from(owned),
           mastered: Array.from(mastered),
+          avatar: avatarId,
+          friends: friends,
+          displayName: name,
         });
         showToast(`Cuenta creada para ${name}`);
       }
@@ -374,12 +471,307 @@
     userNameDisplay.textContent = name;
     userGreeting.classList.remove("hidden");
     userForm.classList.add("hidden");
-    pageTitle.textContent = `Espíritus de ${name}`;
+    pageTitle.textContent = name;
   }
 
   function showUserForm() {
     userForm.classList.remove("hidden");
     userGreeting.classList.add("hidden");
+  }
+
+  // ---------- Foto de perfil ----------
+
+  function renderAvatar() {
+    const sprite = avatarId ? SPRITE_BY_ID.get(avatarId) : null;
+    if (sprite) {
+      avatarImg.src = sprite.icon;
+      avatarImg.classList.remove("hidden");
+      avatarPlaceholder.classList.add("hidden");
+    } else {
+      avatarImg.removeAttribute("src");
+      avatarImg.classList.add("hidden");
+      avatarPlaceholder.classList.remove("hidden");
+    }
+  }
+
+  function setAvatar(id) {
+    avatarId = id || "";
+    localStorage.setItem(AVATAR_KEY, avatarId);
+    renderAvatar();
+    scheduleCloudSave();
+  }
+
+  function renderAvatarOptions(filter) {
+    const term = (filter || "").trim().toLowerCase();
+    const frag = document.createDocumentFragment();
+    SPRITES.filter((s) => !term || s.name.toLowerCase().includes(term)).forEach(
+      (sprite) => {
+        const btn = document.createElement("button");
+        btn.className =
+          "avatar-option" + (sprite.id === avatarId ? " selected" : "");
+        btn.title = sprite.name;
+        btn.innerHTML = `<img src="${sprite.icon}" alt="${sprite.name}" loading="lazy">`;
+        btn.addEventListener("click", () => {
+          setAvatar(sprite.id);
+          closeAvatarModal();
+          showToast("Foto de perfil actualizada");
+        });
+        frag.appendChild(btn);
+      }
+    );
+    avatarGrid.innerHTML = "";
+    avatarGrid.appendChild(frag);
+  }
+
+  function openAvatarModal() {
+    avatarSearch.value = "";
+    renderAvatarOptions("");
+    avatarModal.classList.remove("hidden");
+  }
+
+  function closeAvatarModal() {
+    avatarModal.classList.add("hidden");
+  }
+
+  function setupAvatar() {
+    renderAvatar();
+    avatarBtn.addEventListener("click", openAvatarModal);
+    avatarCloseBtn.addEventListener("click", closeAvatarModal);
+    avatarModal.addEventListener("click", (e) => {
+      if (e.target === avatarModal) closeAvatarModal();
+    });
+    avatarSearch.addEventListener("input", () =>
+      renderAvatarOptions(avatarSearch.value)
+    );
+    avatarRemoveBtn.addEventListener("click", () => {
+      setAvatar("");
+      closeAvatarModal();
+      showToast("Foto de perfil quitada");
+    });
+  }
+
+  // ---------- Amigos e intercambios ----------
+
+  function setupTabs() {
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const isMine = tab.dataset.view === "mine";
+        viewMine.classList.toggle("hidden", !isMine);
+        viewFriends.classList.toggle("hidden", isMine);
+      });
+    });
+  }
+
+  function renderFriendsList() {
+    friendsListEl.innerHTML = "";
+    friends.forEach((name) => {
+      const chip = document.createElement("button");
+      chip.className = "friend-chip" + (name === activeFriend ? " active" : "");
+      const cached = friendCache.get(name);
+      const avatarSprite =
+        cached && cached.avatar ? SPRITE_BY_ID.get(cached.avatar) : null;
+      chip.innerHTML = avatarSprite
+        ? `<img src="${avatarSprite.icon}" alt=""><span>${name}</span>`
+        : `<span class="friend-initial">${name.charAt(0).toUpperCase()}</span><span>${name}</span>`;
+      chip.addEventListener("click", () => selectFriend(name));
+      friendsListEl.appendChild(chip);
+    });
+
+    const hasFriends = friends.length > 0;
+    friendsEmpty.classList.toggle("hidden", hasFriends);
+    if (!hasFriends) {
+      tradeArea.classList.add("hidden");
+      activeFriend = null;
+    }
+  }
+
+  async function addFriend(rawName) {
+    const name = rawName.trim();
+    if (!name) return;
+
+    const me = localStorage.getItem(USERNAME_KEY);
+    const norm = (n) =>
+      window.FirebaseSync
+        ? window.FirebaseSync.normalizeUsername(n)
+        : n.trim().toLowerCase();
+
+    if (me && norm(name) === norm(me)) {
+      showToast("Ese eres tú");
+      return;
+    }
+    if (friends.some((f) => norm(f) === norm(name))) {
+      showToast(`${name} ya está en tu lista`);
+      selectFriend(friends.find((f) => norm(f) === norm(name)));
+      return;
+    }
+
+    await whenFirebaseReady();
+    if (!window.FirebaseSync) {
+      showToast("Sin conexión: no se puede buscar amigos");
+      return;
+    }
+
+    showToast(`Buscando a ${name}...`);
+    try {
+      const data = await window.FirebaseSync.loadUserData(name);
+      if (!data) {
+        showToast(`No existe un jugador llamado "${name}"`);
+        return;
+      }
+      friends.push(name);
+      saveFriends();
+      friendCache.set(name, {
+        owned: new Set(data.owned),
+        mastered: new Set(data.mastered),
+        avatar: data.avatar,
+      });
+      scheduleCloudSave();
+      renderFriendsList();
+      selectFriend(name);
+      showToast(`${name} agregado`);
+    } catch (err) {
+      console.error(err);
+      showToast("No se pudo buscar a ese jugador");
+    }
+  }
+
+  function removeFriend(name) {
+    friends = friends.filter((f) => f !== name);
+    friendCache.delete(name);
+    saveFriends();
+    scheduleCloudSave();
+    if (activeFriend === name) {
+      activeFriend = null;
+      tradeArea.classList.add("hidden");
+    }
+    renderFriendsList();
+    showToast(`${name} eliminado`);
+  }
+
+  async function selectFriend(name) {
+    activeFriend = name;
+    renderFriendsList();
+    tradeFriendName.textContent = name;
+    tradeArea.classList.remove("hidden");
+    friendsEmpty.classList.add("hidden");
+
+    if (!friendCache.has(name)) {
+      tradeGrid.innerHTML = "";
+      tradeHint.textContent = "Cargando espíritus...";
+      await whenFirebaseReady();
+      try {
+        const data = await window.FirebaseSync.loadUserData(name);
+        if (!data) {
+          tradeHint.textContent = "No se encontró a ese jugador.";
+          return;
+        }
+        friendCache.set(name, {
+          owned: new Set(data.owned),
+          mastered: new Set(data.mastered),
+          avatar: data.avatar,
+        });
+        renderFriendsList();
+      } catch (err) {
+        console.error(err);
+        tradeHint.textContent = "No se pudo cargar su lista.";
+        return;
+      }
+    }
+    renderTrade();
+  }
+
+  function getTradeLists() {
+    const f = friendCache.get(activeFriend);
+    if (!f) return { give: [], get: [], his: [] };
+    const give = SPRITES.filter((s) => owned.has(s.id) && !f.owned.has(s.id));
+    const get = SPRITES.filter((s) => !owned.has(s.id) && f.owned.has(s.id));
+    const his = SPRITES.filter((s) => f.owned.has(s.id));
+    return { give, get, his };
+  }
+
+  function renderTrade() {
+    if (!activeFriend || !friendCache.has(activeFriend)) return;
+    const lists = getTradeLists();
+    countGive.textContent = lists.give.length;
+    countGet.textContent = lists.get.length;
+    countHis.textContent = lists.his.length;
+
+    const hints = {
+      give: `Espíritus que tú tienes y a ${activeFriend} le faltan.`,
+      get: `Espíritus que ${activeFriend} tiene y a ti te faltan.`,
+      his: `Todos los espíritus de ${activeFriend}.`,
+    };
+    tradeHint.textContent = hints[tradeMode];
+
+    const list = lists[tradeMode];
+    tradeGrid.innerHTML = "";
+
+    if (list.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent =
+        tradeMode === "give"
+          ? `${activeFriend} ya tiene todo lo que tú tienes.`
+          : tradeMode === "get"
+          ? `No tiene nada que a ti te falte.`
+          : `${activeFriend} todavía no tiene espíritus.`;
+      tradeGrid.appendChild(empty);
+      return;
+    }
+
+    const friendData = friendCache.get(activeFriend);
+    const frag = document.createDocumentFragment();
+    list.forEach((sprite) => {
+      const card = document.createElement("div");
+      card.className = "card owned";
+      card.dataset.rarity = sprite.rarity;
+      const isMasteredByFriend = friendData.mastered.has(sprite.id);
+      card.innerHTML = `
+        ${
+          tradeMode === "his" && isMasteredByFriend
+            ? `<div class="trade-badge"><img src="assets/img/crown.png" alt="Dominado"></div>`
+            : ""
+        }
+        <div class="icon-wrap">
+          <img src="${sprite.icon}" alt="${sprite.name}" loading="lazy">
+        </div>
+        <div class="name">${sprite.name}</div>
+      `;
+      frag.appendChild(card);
+    });
+    tradeGrid.appendChild(frag);
+  }
+
+  function setupFriends() {
+    renderFriendsList();
+
+    addFriendForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = friendInput.value.trim();
+      friendInput.value = "";
+      addFriend(name);
+    });
+
+    removeFriendBtn.addEventListener("click", () => {
+      if (!activeFriend) return;
+      if (!confirm(`¿Quitar a ${activeFriend} de tus amigos?`)) return;
+      removeFriend(activeFriend);
+    });
+
+    document.querySelectorAll(".trade-tabs .chip").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".trade-tabs .chip")
+          .forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
+        tradeMode = btn.dataset.trade;
+        renderTrade();
+      });
+    });
   }
 
   function showToast(msg) {
@@ -420,14 +812,15 @@
     exportBtn.querySelector(".label").textContent = "Generando...";
 
     try {
-      const cols = 18;
-      const cellW = 100;
-      const cellH = 130;
-      const iconSize = 78;
-      const padding = 32;
+      // Una celda por familia de espíritu (25) en vez de una por variante (117)
+      const cols = 5;
+      const cellW = 348;
+      const cellH = 224;
+      const iconSize = 104;
+      const padding = 34;
       const username = localStorage.getItem(USERNAME_KEY);
       const headerH = username ? 205 : 175;
-      const rows = Math.ceil(SPRITES.length / cols);
+      const rows = Math.ceil(SPRITE_GROUPS.length / cols);
 
       const canvas = document.getElementById("exportCanvas");
       canvas.width = padding * 2 + cols * cellW;
@@ -435,11 +828,15 @@
       const ctx = canvas.getContext("2d");
       const cx = canvas.width / 2;
 
-      const [heroBgImg, crownImg, ...images] = await Promise.all([
+      const [heroBgImg, crownImg, avatarSpriteImg, ...images] = await Promise.all([
         loadImage("assets/img/export-bg.webp"),
         loadImage("assets/img/crown.png"),
+        avatarId && SPRITE_BY_ID.get(avatarId)
+          ? loadImage(SPRITE_BY_ID.get(avatarId).icon)
+          : Promise.resolve(null),
         ...SPRITES.map((s) => loadImage(s.icon)),
       ]);
+      const imageById = new Map(SPRITES.map((s, i) => [s.id, images[i]]));
       await document.fonts.ready;
 
       // Background image + light dark overlay for legibility
@@ -462,8 +859,23 @@
       if (username) {
         ctx.font = "600 15px 'Fortnite', -apple-system, Arial, sans-serif";
         ctx.fillStyle = "#c9befe";
-        ctx.fillText(`Jugador: ${username}`, cx, 66);
-        statsY = 100;
+        const nameW = ctx.measureText(username).width;
+        if (avatarSpriteImg) {
+          // Foto de perfil a la izquierda del nombre
+          const av = 30;
+          const avX = cx - nameW / 2 - av - 8;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(avX + av / 2, 66 + av / 2 - 4, av / 2, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.10)";
+          ctx.fill();
+          ctx.clip();
+          ctx.drawImage(avatarSpriteImg, avX, 66 - 4, av, av);
+          ctx.restore();
+        }
+        ctx.fillStyle = "#c9befe";
+        ctx.fillText(username, cx, 66);
+        statsY = 104;
       }
 
       // Stat blocks (conseguidos / dominados)
@@ -480,21 +892,31 @@
 
       ctx.textAlign = "left";
 
-      SPRITES.forEach((sprite, i) => {
+      SPRITE_GROUPS.forEach((group, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
         const x = padding + col * cellW;
         const y = headerH + row * cellH;
-        const isOwned = owned.has(sprite.id);
-        const isMastered = mastered.has(sprite.id);
 
-        const iconX = x + (cellW - iconSize) / 2;
-        const iconY = y;
+        const base = group.base;
+        const baseOwned = owned.has(base.id);
+        const baseMastered = mastered.has(base.id);
 
-        // Icon
-        const img = images[i];
+        // Panel de la familia
+        ctx.fillStyle = "rgba(10,12,22,0.42)";
+        roundRect(ctx, x + 6, y, cellW - 14, cellH - 14, 16);
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        roundRect(ctx, x + 6, y, cellW - 14, cellH - 14, 16);
+        ctx.stroke();
+
+        // Icono del espíritu principal (izquierda)
+        const iconX = x + 20;
+        const iconY = y + 16;
+        const img = imageById.get(base.id);
         if (img) {
-          if (!isOwned) {
+          if (!baseOwned) {
             ctx.save();
             ctx.filter = "grayscale(1) brightness(0.5)";
             ctx.drawImage(img, iconX, iconY, iconSize, iconSize);
@@ -504,55 +926,83 @@
           }
         }
 
-        // Rarity dot (top-right of icon)
-        ctx.beginPath();
-        ctx.arc(iconX + iconSize - 4, iconY + 4, 4, 0, Math.PI * 2);
-        ctx.fillStyle = RARITY_COLOR[sprite.rarity] || "#9095b0";
-        ctx.fill();
-
-        // Mastered crown badge (top-left of icon)
-        if (isMastered) {
-          const starX = iconX + 2;
-          const starY = iconY + 2;
+        // Corona si el principal está dominado
+        if (baseMastered && crownImg) {
+          const bx = iconX + 6;
+          const by = iconY + 6;
           ctx.beginPath();
-          ctx.arc(starX, starY, 9, 0, Math.PI * 2);
+          ctx.arc(bx, by, 11, 0, Math.PI * 2);
           ctx.fillStyle = "rgba(20,23,38,0.92)";
           ctx.fill();
           ctx.lineWidth = 1.5;
           ctx.strokeStyle = "#f5c518";
           ctx.stroke();
-          if (crownImg) {
-            const crownSize = 12;
-            ctx.drawImage(crownImg, starX - crownSize / 2, starY - crownSize / 2, crownSize, crownSize);
-          }
+          ctx.drawImage(crownImg, bx - 7, by - 7, 14, 14);
         }
 
-        // Checkbox below icon
-        const checkSize = 20;
-        const checkX = x + cellW / 2 - checkSize / 2;
-        const checkY = iconY + iconSize + 8;
-        if (isOwned) {
-          ctx.fillStyle = "#35d07f";
-          roundRect(ctx, checkX, checkY, checkSize, checkSize, 5);
+        // Nombre + punto de rareza (derecha del icono)
+        const textX = iconX + iconSize + 14;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.font = "400 27px 'Fortnite', -apple-system, Arial, sans-serif";
+        ctx.fillStyle = baseOwned ? "#ffffff" : "rgba(255,255,255,0.55)";
+        ctx.fillText(group.baseName, textX, iconY + 2);
+
+        ctx.beginPath();
+        ctx.arc(textX + 6, iconY + 40, 5, 0, Math.PI * 2);
+        ctx.fillStyle = RARITY_COLOR[base.rarity] || "#9095b0";
+        ctx.fill();
+        ctx.font = "700 12px 'Fortnite', -apple-system, Arial, sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,0.6)";
+        ctx.fillText(
+          (RARITY_LABEL_ES[base.rarity] || base.rarity).toUpperCase(),
+          textX + 17,
+          iconY + 33
+        );
+
+        // Checkbox del principal
+        drawCheck(ctx, textX, iconY + 56, baseOwned);
+        ctx.font = "700 13px 'Fortnite', -apple-system, Arial, sans-serif";
+        ctx.fillStyle = baseOwned ? "#ffffff" : "rgba(255,255,255,0.5)";
+        ctx.fillText("Base", textX + 26, iconY + 59);
+
+        // Variantes como checkmarks debajo
+        const chipY0 = y + iconSize + 30;
+        const chipW = 100;
+        const chipH = 26;
+        const perRow = 3;
+        group.variants.forEach((v, vi) => {
+          const cRow = Math.floor(vi / perRow);
+          const cCol = vi % perRow;
+          const chipX = x + 18 + cCol * (chipW + 6);
+          const chipYy = chipY0 + cRow * (chipH + 5);
+          const vOwned = owned.has(v.sprite.id);
+          const vMastered = mastered.has(v.sprite.id);
+
+          ctx.fillStyle = vOwned
+            ? "rgba(53,208,127,0.22)"
+            : "rgba(255,255,255,0.05)";
+          roundRect(ctx, chipX, chipYy, chipW, chipH, 13);
           ctx.fill();
-          ctx.strokeStyle = "#06210f";
-          ctx.lineWidth = 2.4;
-          ctx.lineCap = "round";
-          ctx.lineJoin = "round";
-          ctx.beginPath();
-          ctx.moveTo(checkX + 4, checkY + 10);
-          ctx.lineTo(checkX + 8, checkY + 14.5);
-          ctx.lineTo(checkX + 16, checkY + 5);
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = vMastered
+            ? "#f5c518"
+            : vOwned
+            ? "rgba(53,208,127,0.75)"
+            : "rgba(255,255,255,0.16)";
+          roundRect(ctx, chipX, chipYy, chipW, chipH, 13);
           ctx.stroke();
-        } else {
-          ctx.fillStyle = "rgba(10,12,20,0.55)";
-          roundRect(ctx, checkX, checkY, checkSize, checkSize, 5);
-          ctx.fill();
-          ctx.lineWidth = 1.4;
-          ctx.strokeStyle = "rgba(255,255,255,0.4)";
-          roundRect(ctx, checkX, checkY, checkSize, checkSize, 5);
-          ctx.stroke();
-        }
+
+          drawCheck(ctx, chipX + 5, chipYy + 4, vOwned, 18);
+
+          ctx.font = "700 12px 'Fortnite', -apple-system, Arial, sans-serif";
+          ctx.fillStyle = vOwned ? "#ffffff" : "rgba(255,255,255,0.5)";
+          ctx.fillText(v.variant.toUpperCase(), chipX + 27, chipYy + 8);
+
+          if (vMastered && crownImg) {
+            ctx.drawImage(crownImg, chipX + chipW - 17, chipYy + 6, 13, 13);
+          }
+        });
       });
 
       canvas.toBlob(
@@ -582,6 +1032,33 @@
     }
   }
 
+  // Casilla marcada / vacía usada en la imagen exportada
+  function drawCheck(ctx, x, y, checked, size) {
+    const s = size || 20;
+    if (checked) {
+      ctx.fillStyle = "#35d07f";
+      roundRect(ctx, x, y, s, s, s * 0.26);
+      ctx.fill();
+      ctx.strokeStyle = "#06210f";
+      ctx.lineWidth = s * 0.13;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      ctx.moveTo(x + s * 0.22, y + s * 0.52);
+      ctx.lineTo(x + s * 0.42, y + s * 0.73);
+      ctx.lineTo(x + s * 0.79, y + s * 0.27);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = "rgba(10,12,20,0.5)";
+      roundRect(ctx, x, y, s, s, s * 0.26);
+      ctx.fill();
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = "rgba(255,255,255,0.38)";
+      roundRect(ctx, x, y, s, s, s * 0.26);
+      ctx.stroke();
+    }
+  }
+
   function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -598,6 +1075,9 @@
     buildRarityFilter();
     buildCards();
     setupControls();
+    setupTabs();
+    setupAvatar();
+    setupFriends();
     setupUser();
     updateProgress();
     applyFilters();

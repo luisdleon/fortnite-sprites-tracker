@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/img/Spiritsapplogo.png">
 <link rel="apple-touch-icon" href="assets/img/Spiritsapplogo.png">
-<link rel="stylesheet" href="style.css?v=2">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <section class="hero">
@@ -33,6 +33,10 @@
 
 <header class="topbar">
   <div class="topbar-title">
+    <button id="avatarBtn" class="avatar-btn" title="Cambiar foto de perfil">
+      <img id="avatarImg" class="avatar-img hidden" alt="Foto de perfil">
+      <span id="avatarPlaceholder" class="avatar-placeholder">+</span>
+    </button>
     <h1 id="pageTitle">Espíritus</h1>
   </div>
   <button id="exportBtn" class="btn-export" title="Compartir lista como imagen">
@@ -40,6 +44,12 @@
   </button>
 </header>
 
+<nav class="tabs">
+  <button id="tabMine" class="tab active" data-view="mine">Mis Espíritus</button>
+  <button id="tabFriends" class="tab" data-view="friends">Intercambios</button>
+</nav>
+
+<section id="viewMine">
 <section class="progress-panel">
   <div class="progress-stats">
     <div class="stat">
@@ -77,6 +87,49 @@
 </section>
 
 <main id="grid" class="grid"></main>
+</section>
+
+<section id="viewFriends" class="hidden">
+  <div class="friends-panel">
+    <form id="addFriendForm" class="friend-form">
+      <input id="friendInput" type="text" placeholder="Nombre de tu amigo..." maxlength="24" autocomplete="off">
+      <button type="submit" class="btn-user-save">Agregar</button>
+    </form>
+    <div id="friendsList" class="friends-list"></div>
+  </div>
+
+  <div id="tradeArea" class="trade-area hidden">
+    <div class="trade-header">
+      <span class="trade-with">Intercambio con <strong id="tradeFriendName"></strong></span>
+      <button id="removeFriendBtn" class="btn-remove-friend">Quitar amigo</button>
+    </div>
+
+    <div class="toggle-row trade-tabs">
+      <button class="chip active" data-trade="give">Le puedes dar (<span id="countGive">0</span>)</button>
+      <button class="chip" data-trade="get">Te puede dar (<span id="countGet">0</span>)</button>
+      <button class="chip" data-trade="his">Sus espíritus (<span id="countHis">0</span>)</button>
+    </div>
+
+    <p id="tradeHint" class="trade-hint"></p>
+    <div id="tradeGrid" class="grid trade-grid"></div>
+  </div>
+
+  <div id="friendsEmpty" class="empty-state">
+    Agrega a un amigo por su nombre de jugador para comparar espíritus.
+  </div>
+</section>
+
+<div id="avatarModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2>Foto de perfil</h2>
+      <button id="avatarCloseBtn" class="btn-modal-close">✕</button>
+    </div>
+    <input id="avatarSearch" type="search" placeholder="Buscar espíritu..." autocomplete="off">
+    <div id="avatarGrid" class="avatar-grid"></div>
+    <button id="avatarRemoveBtn" class="btn-reset">Quitar foto</button>
+  </div>
+</div>
 
 <footer class="footer">
   <button id="resetBtn" class="btn-reset">Reiniciar progreso</button>
@@ -87,8 +140,8 @@
 
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
-<script type="module" src="firebase-init.js?v=2"></script>
-<script src="data.js?v=2"></script>
-<script src="app.js?v=2"></script>
+<script type="module" src="firebase-init.js?v=3"></script>
+<script src="data.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

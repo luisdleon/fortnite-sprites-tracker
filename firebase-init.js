@@ -28,17 +28,23 @@ async function loadUserData(username) {
   const snap = await getDoc(doc(db, "spiritsTrackerUsers", id));
   if (!snap.exists()) return null;
   const data = snap.data();
-  return { owned: data.owned || [], mastered: data.mastered || [] };
+  return {
+    owned: data.owned || [],
+    mastered: data.mastered || [],
+    avatar: data.avatar || "",
+    friends: data.friends || [],
+    displayName: data.displayName || username,
+  };
 }
 
-async function saveUserData(username, { owned, mastered }) {
+async function saveUserData(username, { owned, mastered, avatar, friends, displayName }) {
   const id = normalizeUsername(username);
-  await setDoc(
-    doc(db, "spiritsTrackerUsers", id),
-    { owned, mastered, updatedAt: serverTimestamp() },
-    { merge: true }
-  );
+  const payload = { owned, mastered, updatedAt: serverTimestamp() };
+  if (avatar !== undefined) payload.avatar = avatar;
+  if (friends !== undefined) payload.friends = friends;
+  if (displayName !== undefined) payload.displayName = displayName;
+  await setDoc(doc(db, "spiritsTrackerUsers", id), payload, { merge: true });
 }
 
-window.FirebaseSync = { loadUserData, saveUserData };
+window.FirebaseSync = { loadUserData, saveUserData, normalizeUsername };
 window.dispatchEvent(new Event("firebase-sync-ready"));
