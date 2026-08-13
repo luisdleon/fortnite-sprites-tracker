@@ -6,6 +6,7 @@
   const USERNAME_KEY = "fortniteSpiritsUsername";
   const AVATAR_KEY = "fortniteSpiritsAvatar";
   const FRIENDS_KEY = "fortniteSpiritsFriends";
+  const VIEW_KEY = "fortniteSpiritsViewMode";
   const VARIANT_PREFIXES = [
     "Cube ",
     "Gold ",
@@ -81,6 +82,7 @@
   let owned = loadSet(STORAGE_KEY);
   let mastered = loadSet(MASTERED_KEY);
   let avatarId = localStorage.getItem(AVATAR_KEY) || "";
+  let viewMode = localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid";
   let friends = loadFriends();
   let activeMode = "all"; // all | owned | missing
   let activeRarity = null; // null = todas
@@ -338,22 +340,44 @@
     }
   }
 
+  // ---------- Vista cuadrícula / lista ----------
+
+  function applyViewMode(mode) {
+    viewMode = mode === "list" ? "list" : "grid";
+    grid.classList.toggle("list-view", viewMode === "list");
+    localStorage.setItem(VIEW_KEY, viewMode);
+    document.querySelectorAll(".view-btn").forEach((b) => {
+      b.classList.toggle("active", b.dataset.viewMode === viewMode);
+    });
+  }
+
+  function setupViewToggle() {
+    document.querySelectorAll(".view-btn").forEach((btn) => {
+      btn.addEventListener("click", () => applyViewMode(btn.dataset.viewMode));
+    });
+    applyViewMode(viewMode);
+  }
+
   function setupControls() {
     searchInput.addEventListener("input", () => {
       searchTerm = searchInput.value.trim().toLowerCase();
       applyFilters();
     });
 
-    document.querySelectorAll(".toggle-row .chip").forEach((btn) => {
+    // Solo los chips de la vista "Mis Espíritus" (los de intercambios se
+    // manejan aparte en setupFriends)
+    document.querySelectorAll(".filter-row .toggle-row .chip").forEach((btn) => {
       btn.addEventListener("click", () => {
         document
-          .querySelectorAll(".toggle-row .chip")
+          .querySelectorAll(".filter-row .toggle-row .chip")
           .forEach((c) => c.classList.remove("active"));
         btn.classList.add("active");
         activeMode = btn.dataset.mode;
         applyFilters();
       });
     });
+
+    setupViewToggle();
 
     resetBtn.addEventListener("click", () => {
       if (!confirm("¿Seguro que quieres reiniciar todo el progreso?")) return;
@@ -575,8 +599,9 @@
       const avatarSprite =
         cached && cached.avatar ? SPRITE_BY_ID.get(cached.avatar) : null;
       chip.innerHTML = avatarSprite
-        ? `<img src="${avatarSprite.icon}" alt=""><span>${name}</span>`
-        : `<span class="friend-initial">${name.charAt(0).toUpperCase()}</span><span>${name}</span>`;
+        ? `<img src="${avatarSprite.icon}" alt=""><span class="friend-name">${name}</span>`
+        : `<span class="friend-initial">${name.charAt(0).toUpperCase()}</span><span class="friend-name">${name}</span>`;
+      chip.title = name;
       chip.addEventListener("click", () => selectFriend(name));
       friendsListEl.appendChild(chip);
     });

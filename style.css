@@ -898,3 +898,114 @@ body {
   background: #f7ff19;
   color: #2a2f00;
 }
+
+/* ---------- Selector de vista (cuadrícula / lista) ---------- */
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-row .toggle-row {
+  flex: 1;
+  min-width: 0;
+}
+
+.view-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.view-btn svg { fill: var(--text-dim); }
+
+.view-btn.active { background: var(--accent); }
+.view-btn.active svg { fill: #0b0d16; }
+
+/* ---------- Modo lista ---------- */
+
+.grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.grid.list-view .card {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-right: 8px;
+}
+
+.grid.list-view .icon-wrap {
+  flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  aspect-ratio: auto;
+  padding: 6px;
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.grid.list-view .card .name {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  text-align: left;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.grid.list-view .card-actions {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 0;
+  padding: 0;
+}
+
+.grid.list-view .action-btn.owned-toggle {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+}
+
+/* ---------- Amigos en 3 columnas ---------- */
+
+.friends-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.friend-chip {
+  min-width: 0;
+  padding: 6px 10px 6px 6px;
+}
+
+.friend-chip img,
+.friend-chip .friend-initial {
+  flex: 0 0 auto;
+}
+
+.friend-chip .friend-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
