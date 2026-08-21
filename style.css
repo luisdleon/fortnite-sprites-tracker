@@ -1009,3 +1009,19 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ---------- Selector de temporada ---------- */
+
+.season-row { gap: 6px; }
+
+.season-chip {
+  font-family: "Inter", -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.season-chip.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #2a1f00;
+}

@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/img/Spiritsapplogo.png">
 <link rel="apple-touch-icon" href="assets/img/Spiritsapplogo.png">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <section class="hero">
@@ -70,6 +70,11 @@
 </section>
 
 <section class="controls">
+  <div class="toggle-row season-row" id="seasonRow">
+    <button class="chip season-chip active" data-season="all">Todas</button>
+    <button class="chip season-chip" data-season="C7S3">C7 S3</button>
+    <button class="chip season-chip" data-season="C7S4">C7 S4</button>
+  </div>
   <input id="searchInput" type="search" placeholder="Buscar espíritu..." autocomplete="off">
   <div class="dropdown-row">
     <select id="rarityFilter" class="dropdown"></select>
@@ -150,8 +155,8 @@
 
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
-<script type="module" src="firebase-init.js?v=7"></script>
-<script src="data.js?v=7"></script>
-<script src="app.js?v=7"></script>
+<script type="module" src="firebase-init.js?v=8"></script>
+<script src="data.js?v=8"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

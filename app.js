@@ -7,6 +7,7 @@
   const AVATAR_KEY = "fortniteSpiritsAvatar";
   const FRIENDS_KEY = "fortniteSpiritsFriends";
   const VIEW_KEY = "fortniteSpiritsViewMode";
+  const SEASON_KEY = "fortniteSpiritsSeason";
   const VARIANT_PREFIXES = [
     "Cube ",
     "Gold ",
@@ -15,7 +16,9 @@
     "Galaxy ",
     "Gem ",
     "Holofoil ",
+    "Cheat Master ",
   ];
+  const SEASON_LABEL = { C7S3: "C7 S3", C7S4: "C7 S4" };
   const RARITY_ORDER = ["MYTHIC", "LEGENDARY", "EPIC", "RARE", "SPECIAL"];
   const RARITY_LABEL_ES = {
     MYTHIC: "Mítico",
@@ -83,6 +86,7 @@
   let mastered = loadSet(MASTERED_KEY);
   let avatarId = localStorage.getItem(AVATAR_KEY) || "";
   let viewMode = localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid";
+  let activeSeason = localStorage.getItem(SEASON_KEY) || "all"; // all | C7S3 | C7S4
   let friends = loadFriends();
   let activeMode = "all"; // all | owned | missing
   let activeRarity = null; // null = todas
@@ -108,10 +112,10 @@
   }
 
   // Agrupa los 117 espiritus en sus 25 familias (base + variantes)
-  function buildGroups() {
+  function buildGroups(list) {
     const groups = [];
     const byBase = new Map();
-    SPRITES.forEach((sprite) => {
+    (list || SPRITES).forEach((sprite) => {
       let baseName = sprite.name;
       let variant = null;
       for (const p of VARIANT_PREFIXES) {
@@ -133,7 +137,12 @@
     return groups;
   }
 
-  const SPRITE_GROUPS = buildGroups();
+  // Espíritus de la temporada seleccionada (o todos)
+  function seasonSprites() {
+    return activeSeason === "all"
+      ? SPRITES
+      : SPRITES.filter((s) => s.season === activeSeason);
+  }
 
   function loadSet(key) {
     try {
@@ -196,15 +205,21 @@
   }
 
   function updateProgress() {
-    ownedCountEl.textContent = owned.size;
-    totalCountEl.textContent = SPRITES.length;
-    const pct = SPRITES.length ? (owned.size / SPRITES.length) * 100 : 0;
-    progressFill.style.width = pct.toFixed(1) + "%";
+    // Los contadores reflejan la temporada que se está viendo
+    const list = seasonSprites();
+    const total = list.length;
+    const ownedInSeason = list.filter((s) => owned.has(s.id)).length;
+    const masteredInSeason = list.filter((s) => mastered.has(s.id)).length;
 
-    masteredCountEl.textContent = mastered.size;
-    totalCountMasteredEl.textContent = SPRITES.length;
-    const pctM = SPRITES.length ? (mastered.size / SPRITES.length) * 100 : 0;
-    progressFillMastered.style.width = pctM.toFixed(1) + "%";
+    ownedCountEl.textContent = ownedInSeason;
+    totalCountEl.textContent = total;
+    progressFill.style.width =
+      (total ? (ownedInSeason / total) * 100 : 0).toFixed(1) + "%";
+
+    masteredCountEl.textContent = masteredInSeason;
+    totalCountMasteredEl.textContent = total;
+    progressFillMastered.style.width =
+      (total ? (masteredInSeason / total) * 100 : 0).toFixed(1) + "%";
   }
 
   function buildRarityFilter() {
@@ -241,6 +256,7 @@
       card.className = "card" + (isOwned ? " owned" : "") + (isMastered ? " mastered" : "");
       card.dataset.id = sprite.id;
       card.dataset.rarity = sprite.rarity;
+      card.dataset.season = sprite.season || "";
       card.dataset.name = sprite.name.toLowerCase();
 
       card.innerHTML = `
@@ -316,6 +332,8 @@
       const isMastered = card.classList.contains("mastered");
       let visible = true;
 
+      if (activeSeason !== "all" && card.dataset.season !== activeSeason)
+        visible = false;
       if (activeMode === "owned" && !isOwned) visible = false;
       if (activeMode === "missing" && isOwned) visible = false;
       if (activeRarity && card.dataset.rarity !== activeRarity) visible = false;
@@ -338,6 +356,25 @@
     } else if (emptyState) {
       emptyState.remove();
     }
+  }
+
+  // ---------- Selector de temporada ----------
+
+  function setupSeason() {
+    const chips = document.querySelectorAll(".season-chip");
+    chips.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.season === activeSeason);
+      btn.addEventListener("click", () => {
+        activeSeason = btn.dataset.season;
+        localStorage.setItem(SEASON_KEY, activeSeason);
+        chips.forEach((c) =>
+          c.classList.toggle("active", c.dataset.season === activeSeason)
+        );
+        updateProgress();
+        applyFilters();
+        if (activeFriend) renderTrade();
+      });
+    });
   }
 
   // ---------- Vista cuadrícula / lista ----------
@@ -712,9 +749,10 @@
   function getTradeLists() {
     const f = friendCache.get(activeFriend);
     if (!f) return { give: [], get: [], his: [] };
-    const give = SPRITES.filter((s) => owned.has(s.id) && !f.owned.has(s.id));
-    const get = SPRITES.filter((s) => !owned.has(s.id) && f.owned.has(s.id));
-    const his = SPRITES.filter((s) => f.owned.has(s.id));
+    const list = seasonSprites();
+    const give = list.filter((s) => owned.has(s.id) && !f.owned.has(s.id));
+    const get = list.filter((s) => !owned.has(s.id) && f.owned.has(s.id));
+    const his = list.filter((s) => f.owned.has(s.id));
     return { give, get, his };
   }
 
@@ -837,7 +875,9 @@
     exportBtn.querySelector(".label").textContent = "Generando...";
 
     try {
-      // Una celda por familia de espíritu (25) en vez de una por variante (117)
+      // Una celda por familia de espíritu en vez de una por variante
+      const seasonList = seasonSprites();
+      const groups = buildGroups(seasonList);
       const cols = 5;
       const cellW = 348;
       const cellH = 224;
@@ -845,7 +885,7 @@
       const padding = 34;
       const username = localStorage.getItem(USERNAME_KEY);
       const headerH = username ? 205 : 175;
-      const rows = Math.ceil(SPRITE_GROUPS.length / cols);
+      const rows = Math.ceil(groups.length / cols);
 
       const canvas = document.getElementById("exportCanvas");
       canvas.width = padding * 2 + cols * cellW;
@@ -878,7 +918,13 @@
       ctx.textAlign = "center";
       ctx.font = "800 30px 'Fortnite', -apple-system, Arial, sans-serif";
       ctx.fillStyle = "#ffffff";
-      ctx.fillText("MIS ESPÍRITUS · FORTNITE", cx, 28);
+      ctx.fillText(
+        activeSeason === "all"
+          ? "MIS ESPÍRITUS · FORTNITE"
+          : `MIS ESPÍRITUS · ${SEASON_LABEL[activeSeason] || activeSeason}`,
+        cx,
+        28
+      );
 
       let statsY = 78;
       if (username) {
@@ -905,8 +951,10 @@
 
       // Stat blocks (conseguidos / dominados)
       const gap = 130;
-      drawStatBlock(ctx, cx - gap, statsY, owned.size, SPRITES.length, "CONSEGUIDOS");
-      drawStatBlock(ctx, cx + gap, statsY, mastered.size, SPRITES.length, "DOMINADOS");
+      const ownedInSeason = seasonList.filter((s) => owned.has(s.id)).length;
+      const masteredInSeason = seasonList.filter((s) => mastered.has(s.id)).length;
+      drawStatBlock(ctx, cx - gap, statsY, ownedInSeason, seasonList.length, "CONSEGUIDOS");
+      drawStatBlock(ctx, cx + gap, statsY, masteredInSeason, seasonList.length, "DOMINADOS");
 
       ctx.strokeStyle = "rgba(255,255,255,0.25)";
       ctx.lineWidth = 1;
@@ -917,7 +965,7 @@
 
       ctx.textAlign = "left";
 
-      SPRITE_GROUPS.forEach((group, i) => {
+      groups.forEach((group, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
         const x = padding + col * cellW;
@@ -1095,10 +1143,9 @@
   }
 
   function init() {
-    totalCountEl.textContent = SPRITES.length;
-    totalCountMasteredEl.textContent = SPRITES.length;
     buildRarityFilter();
     buildCards();
+    setupSeason();
     setupControls();
     setupTabs();
     setupAvatar();
