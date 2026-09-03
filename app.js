@@ -8,16 +8,18 @@
   const FRIENDS_KEY = "fortniteSpiritsFriends";
   const VIEW_KEY = "fortniteSpiritsViewMode";
   const SEASON_KEY = "fortniteSpiritsSeason";
-  const VARIANT_PREFIXES = [
-    "Cube ",
-    "Gold ",
-    "Quack ",
-    "Gummy ",
-    "Galaxy ",
-    "Gem ",
-    "Holofoil ",
-    "Cheat Master ",
-  ];
+  // Etiqueta corta de cada variante para la imagen exportada
+  const VARIANT_LABEL = {
+    cube: "Cube",
+    gold: "Gold",
+    quack: "Quack",
+    candy: "Gummy",
+    galaxy: "Galaxy",
+    gem: "Gem",
+    holofoil: "Holofoil",
+    cheatmaster: "Cheat Master",
+    hacker: "Loot Hacker",
+  };
   const SEASON_LABEL = { C7S3: "C7 S3", C7S4: "C7 S4" };
   const RARITY_ORDER = ["MYTHIC", "LEGENDARY", "EPIC", "RARE", "SPECIAL"];
   const RARITY_LABEL_ES = {
@@ -116,23 +118,25 @@
     const groups = [];
     const byBase = new Map();
     (list || SPRITES).forEach((sprite) => {
-      let baseName = sprite.name;
-      let variant = null;
-      for (const p of VARIANT_PREFIXES) {
-        if (sprite.name.startsWith(p)) {
-          baseName = sprite.name.slice(p.length);
-          variant = p.trim();
-          break;
-        }
-      }
+      const baseName = sprite.parent || sprite.name;
       let g = byBase.get(baseName);
       if (!g) {
         g = { baseName, base: null, variants: [] };
         byBase.set(baseName, g);
         groups.push(g);
       }
-      if (variant === null) g.base = sprite;
-      else g.variants.push({ variant, sprite });
+      if (!sprite.variant || sprite.variant === "base") {
+        g.base = sprite;
+      } else {
+        g.variants.push({
+          variant: VARIANT_LABEL[sprite.variant] || sprite.variant,
+          sprite,
+        });
+      }
+    });
+    // Si una familia no tiene base (variante suelta), usar la primera como base
+    groups.forEach((g) => {
+      if (!g.base && g.variants.length) g.base = g.variants.shift().sprite;
     });
     return groups;
   }
