@@ -1,5 +1,5 @@
 // Datos de fortnite.gg/sprites
-// C7S3: 117  |  C7S4: 47
+// C7S3: 117  |  C7S4: 61
 const SPRITES = [
   {
     "id": "john-wick-0",
@@ -1082,6 +1082,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-jonesy-164",
+    "name": "Loot Hacker Jonesy",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Jonesy_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Jonesy",
+    "variant": "hacker"
+  },
+  {
     "id": "adventure-132",
     "name": "Adventure",
     "rarity": "RARE",
@@ -1107,6 +1116,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Adventure",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-adventure-165",
+    "name": "Loot Hacker Adventure",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Dwarf_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Adventure",
+    "variant": "hacker"
   },
   {
     "id": "bush-123",
@@ -1136,6 +1154,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-bushranger-166",
+    "name": "Loot Hacker Bushranger",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BushRanger_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Bush",
+    "variant": "hacker"
+  },
+  {
     "id": "sonic-141",
     "name": "Sonic",
     "rarity": "EPIC",
@@ -1161,6 +1188,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Sonic",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-sonic-167",
+    "name": "Loot Hacker Sonic",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_NarrowFlea_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Sonic",
+    "variant": "hacker"
   },
   {
     "id": "tails-126",
@@ -1190,6 +1226,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-tails-168",
+    "name": "Loot Hacker Tails",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_NarrowFlea_Monkey_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Tails",
+    "variant": "hacker"
+  },
+  {
     "id": "shadow-120",
     "name": "Shadow",
     "rarity": "EPIC",
@@ -1215,6 +1260,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Shadow",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-shadow-169",
+    "name": "Loot Hacker Shadow",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_ReloadOverTime_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Shadow",
+    "variant": "hacker"
   },
   {
     "id": "8-bit-147",
@@ -1244,6 +1298,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-8-bit-170",
+    "name": "Loot Hacker 8-Bit",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_EightBitBlaster_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "8-Bit",
+    "variant": "hacker"
+  },
+  {
     "id": "jackrabbit-117",
     "name": "Jackrabbit",
     "rarity": "LEGENDARY",
@@ -1269,6 +1332,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Jackrabbit",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-jackrabbit-171",
+    "name": "Loot Hacker Jackrabbit",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_DoubleJump_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Jackrabbit",
+    "variant": "hacker"
   },
   {
     "id": "crown-144",
@@ -1334,6 +1406,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-killswitch-172",
+    "name": "Loot Hacker Killswitch",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Killswitch_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Killswitch",
+    "variant": "hacker"
+  },
+  {
     "id": "klombo-135",
     "name": "Klombo",
     "rarity": "MYTHIC",
@@ -1359,6 +1440,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Klombo",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-klombo-173",
+    "name": "Loot Hacker Klombo",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Klombo_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Klombo",
+    "variant": "hacker"
   },
   {
     "id": "mega-man-154",
@@ -1397,6 +1487,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-overshield-174",
+    "name": "Loot Hacker Overshield",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Overshield_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Overshield",
+    "variant": "hacker"
+  },
+  {
     "id": "x-ray-158",
     "name": "X-Ray",
     "rarity": "LEGENDARY",
@@ -1422,6 +1521,15 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "X-Ray",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-x-ray-175",
+    "name": "Loot Hacker X-Ray",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerB_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "X-Ray",
+    "variant": "hacker"
   },
   {
     "id": "onigiri-161",
@@ -1451,6 +1559,15 @@ const SPRITES = [
     "variant": "cheatmaster"
   },
   {
+    "id": "loot-hacker-onigiri-176",
+    "name": "Loot Hacker Onigiri",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerC_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Onigiri",
+    "variant": "hacker"
+  },
+  {
     "id": "storm-scout-150",
     "name": "Storm Scout",
     "rarity": "RARE",
@@ -1476,5 +1593,14 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Storm Scout",
     "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-storm-scout-177",
+    "name": "Loot Hacker Storm Scout",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_StormScout_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Storm Scout",
+    "variant": "hacker"
   }
 ];
