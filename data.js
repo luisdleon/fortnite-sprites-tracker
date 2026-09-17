@@ -1,5 +1,5 @@
 // Datos de fortnite.gg/sprites
-// C7S3: 117  |  C7S4: 61
+// C7S3: 117  |  C7S4: 74
 const SPRITES = [
   {
     "id": "john-wick-0",
@@ -1601,6 +1601,123 @@ const SPRITES = [
     "icon": "assets/icons/T_Icon_BR_Creature_Sprite_StormScout_Hacker_L.webp",
     "season": "C7S4",
     "parent": "Storm Scout",
+    "variant": "hacker"
+  },
+  {
+    "id": "bounty-hunter-crown-178",
+    "name": "Bounty Hunter Crown",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Crown_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Crown",
+    "variant": "reaper"
+  },
+  {
+    "id": "blinky-179",
+    "name": "Blinky",
+    "rarity": "LEGENDARY",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_GhostDamage_L.webp",
+    "season": "C7S4",
+    "parent": "Blinky",
+    "variant": "base"
+  },
+  {
+    "id": "gold-blinky-180",
+    "name": "Gold Blinky",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_GhostDamage_Gold_L.webp",
+    "season": "C7S4",
+    "parent": "Blinky",
+    "variant": "gold"
+  },
+  {
+    "id": "cheat-master-blinky-181",
+    "name": "Cheat Master Blinky",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_GhostDamage_Cheatmaster_L.webp",
+    "season": "C7S4",
+    "parent": "Blinky",
+    "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-blinky-182",
+    "name": "Loot Hacker Blinky",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_GhostDamage_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Blinky",
+    "variant": "hacker"
+  },
+  {
+    "id": "crash-bandicoot-183",
+    "name": "Crash Bandicoot",
+    "rarity": "LEGENDARY",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BodySlam_L.webp",
+    "season": "C7S4",
+    "parent": "Crash Bandicoot",
+    "variant": "base"
+  },
+  {
+    "id": "gold-crash-bandicoot-184",
+    "name": "Gold Crash Bandicoot",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BodySlam_Gold_L.webp",
+    "season": "C7S4",
+    "parent": "Crash Bandicoot",
+    "variant": "gold"
+  },
+  {
+    "id": "cheat-master-crash-bandicoot-185",
+    "name": "Cheat Master Crash Bandicoot",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BodySlam_Cheatmaster_L.webp",
+    "season": "C7S4",
+    "parent": "Crash Bandicoot",
+    "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-crash-bandicoot-186",
+    "name": "Loot Hacker Crash Bandicoot",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BodySlam_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Crash Bandicoot",
+    "variant": "hacker"
+  },
+  {
+    "id": "pond-187",
+    "name": "Pond",
+    "rarity": "EPIC",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerA_L.webp",
+    "season": "C7S4",
+    "parent": "Pond",
+    "variant": "base"
+  },
+  {
+    "id": "gold-pond-188",
+    "name": "Gold Pond",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerA_Gold_L.webp",
+    "season": "C7S4",
+    "parent": "Pond",
+    "variant": "gold"
+  },
+  {
+    "id": "cheat-master-pond-189",
+    "name": "Cheat Master Pond",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerA_Cheatmaster_L.webp",
+    "season": "C7S4",
+    "parent": "Pond",
+    "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-pond-190",
+    "name": "Loot Hacker Pond",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerA_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Pond",
     "variant": "hacker"
   }
 ];

@@ -19,6 +19,7 @@
     holofoil: "Holofoil",
     cheatmaster: "Cheat Master",
     hacker: "Loot Hacker",
+    reaper: "Bounty Hunter",
   };
   const SEASON_LABEL = { C7S3: "C7 S3", C7S4: "C7 S4" };
   const RARITY_ORDER = ["MYTHIC", "LEGENDARY", "EPIC", "RARE", "SPECIAL"];
