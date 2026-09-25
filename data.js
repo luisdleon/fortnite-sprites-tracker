@@ -1,5 +1,5 @@
 // Datos de fortnite.gg/sprites
-// C7S3: 117  |  C7S4: 74
+// C7S3: 117  |  C7S4: 96
 const SPRITES = [
   {
     "id": "john-wick-0",
@@ -1719,5 +1719,203 @@ const SPRITES = [
     "season": "C7S4",
     "parent": "Pond",
     "variant": "hacker"
+  },
+  {
+    "id": "bounty-hunter-jonesy-191",
+    "name": "Bounty Hunter Jonesy",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Jonesy_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Jonesy",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-adventure-192",
+    "name": "Bounty Hunter Adventure",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Dwarf_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Adventure",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-bush-193",
+    "name": "Bounty Hunter Bush",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BushRanger_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Bush",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-sonic-194",
+    "name": "Bounty Hunter Sonic",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_NarrowFlea_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Sonic",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-tails-195",
+    "name": "Bounty Hunter Tails",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_NarrowFleaMonkey_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Tails",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-shadow-196",
+    "name": "Bounty Hunter Shadow",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_ReloadOverTime_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Shadow",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-8-bit-197",
+    "name": "Bounty Hunter 8-Bit",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_8BitBlaster_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "8-Bit",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-jackrabbit-198",
+    "name": "Bounty Hunter Jackrabbit",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_DoubleJump_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Jackrabbit",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-killswitch-199",
+    "name": "Bounty Hunter Killswitch",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Killswitch_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Killswitch",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-klombo-200",
+    "name": "Bounty Hunter Klombo",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Klombo_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Klombo",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-overshield-201",
+    "name": "Bounty Hunter Overshield",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Overshield_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Overshield",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-x-ray-202",
+    "name": "Bounty Hunter X-Ray",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerB_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "X-Ray",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-onigiri-203",
+    "name": "Bounty Hunter Onigiri",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerC_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Onigiri",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-storm-scout-204",
+    "name": "Bounty Hunter Storm Scout",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_StormScout_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Storm Scout",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-blinky-205",
+    "name": "Bounty Hunter Blinky",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_GhostDamage_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Blinky",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-crash-bandicoot-206",
+    "name": "Bounty Hunter Crash Bandicoot",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_BodySlam_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Crash Bandicoot",
+    "variant": "reaper"
+  },
+  {
+    "id": "bounty-hunter-pond-207",
+    "name": "Bounty Hunter Pond",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_WinnerA_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Pond",
+    "variant": "reaper"
+  },
+  {
+    "id": "morgana-208",
+    "name": "Morgana",
+    "rarity": "EPIC",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_IncreaseHeals_L.webp",
+    "season": "C7S4",
+    "parent": "Morgana",
+    "variant": "base"
+  },
+  {
+    "id": "gold-morgana-209",
+    "name": "Gold Morgana",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_IncreaseHeals_Gold_L.webp",
+    "season": "C7S4",
+    "parent": "Morgana",
+    "variant": "gold"
+  },
+  {
+    "id": "cheat-master-morgana-210",
+    "name": "Cheat Master Morgana",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_IncreaseHeals_Cheatmaster_L.webp",
+    "season": "C7S4",
+    "parent": "Morgana",
+    "variant": "cheatmaster"
+  },
+  {
+    "id": "loot-hacker-morgana-211",
+    "name": "Loot Hacker Morgana",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_IncreaseHeals_Hacker_L.webp",
+    "season": "C7S4",
+    "parent": "Morgana",
+    "variant": "hacker"
+  },
+  {
+    "id": "bounty-hunter-morgana-212",
+    "name": "Bounty Hunter Morgana",
+    "rarity": "SPECIAL",
+    "icon": "assets/icons/T_Icon_BR_Creature_Sprite_IncreaseHeals_BountyHunter_L.webp",
+    "season": "C7S4",
+    "parent": "Morgana",
+    "variant": "reaper"
   }
 ];
