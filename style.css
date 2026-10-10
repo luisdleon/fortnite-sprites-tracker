@@ -76,7 +76,7 @@ body {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url("assets/img/hero-override.webp");
+  background-image: url("assets/img/hero-halloween.webp");
   background-size: cover;
   background-position: center center;
 }
@@ -93,6 +93,18 @@ body {
     rgba(11,13,22,0.85) 85%,
     var(--bg) 100%
   );
+}
+
+.hero-logo {
+  position: absolute;
+  z-index: 2;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(46%, 230px);
+  height: auto;
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.75));
+  pointer-events: none;
 }
 
 .hero-content {
