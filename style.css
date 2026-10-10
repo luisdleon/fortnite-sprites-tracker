@@ -304,11 +304,12 @@ body {
 
 .dropdown-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .dropdown {
-  flex: 1;
+  flex: 1 1 calc(50% - 4px);
   min-width: 0;
   padding: 10px 12px;
   border-radius: var(--radius);
@@ -367,6 +368,7 @@ body {
 
 @media (min-width: 700px) {
   .grid { grid-template-columns: repeat(5, 1fr); }
+  .dropdown { flex: 1 1 0; }
 }
 @media (min-width: 1000px) {
   .grid { grid-template-columns: repeat(7, 1fr); }

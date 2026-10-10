@@ -49,6 +49,7 @@
   const searchInput = document.getElementById("searchInput");
   const rarityFilterEl = document.getElementById("rarityFilter");
   const masteredFilterEl = document.getElementById("masteredFilter");
+  const variantFilterEl = document.getElementById("variantFilter");
   const toastEl = document.getElementById("toast");
   const exportBtn = document.getElementById("exportBtn");
   const resetBtn = document.getElementById("resetBtn");
@@ -94,6 +95,7 @@
   let friends = loadFriends();
   let activeMode = "all"; // all | owned | missing
   let activeRarity = null; // null = todas
+  let activeVariant = ""; // "" = todas
   let activeMastered = ""; // "" | yes | no
   let searchTerm = "";
 
@@ -250,6 +252,37 @@
       activeMastered = masteredFilterEl.value;
       applyFilters();
     });
+
+    buildVariantFilter();
+  }
+
+  function buildVariantFilter() {
+    const presentes = new Set(SPRITES.map((s) => s.variant).filter(Boolean));
+    const optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = "Todas las variantes";
+    variantFilterEl.appendChild(optAll);
+
+    Object.keys(VARIANT_LABEL)
+      .filter((v) => presentes.has(v))
+      .forEach((v) => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = VARIANT_LABEL[v];
+        variantFilterEl.appendChild(opt);
+      });
+
+    if (presentes.has("base")) {
+      const opt = document.createElement("option");
+      opt.value = "base";
+      opt.textContent = "Base";
+      variantFilterEl.insertBefore(opt, variantFilterEl.children[1] || null);
+    }
+
+    variantFilterEl.addEventListener("change", () => {
+      activeVariant = variantFilterEl.value;
+      applyFilters();
+    });
   }
 
   function buildCards() {
@@ -264,6 +297,7 @@
       card.dataset.rarity = sprite.rarity;
       card.dataset.season = sprite.season || "";
       card.dataset.name = sprite.name.toLowerCase();
+      card.dataset.variant = sprite.variant || "";
 
       card.innerHTML = `
         <div class="icon-wrap">
@@ -343,6 +377,7 @@
       if (activeMode === "owned" && !isOwned) visible = false;
       if (activeMode === "missing" && isOwned) visible = false;
       if (activeRarity && card.dataset.rarity !== activeRarity) visible = false;
+      if (activeVariant && card.dataset.variant !== activeVariant) visible = false;
       if (activeMastered === "yes" && !isMastered) visible = false;
       if (activeMastered === "no" && isMastered) visible = false;
       if (searchTerm && !card.dataset.name.includes(searchTerm)) visible = false;
