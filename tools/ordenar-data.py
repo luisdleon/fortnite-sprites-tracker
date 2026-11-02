@@ -26,6 +26,7 @@ ORDEN_VARIANTES = {
              "holofoil"],
     "C7S4": ["base", "gold", "cheatmaster", "hacker", "reaper", "tricktreat",
              "quack"],
+    "C7MS": ["base", "jeweled", "cursed"],
 }
 
 RUTA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data.js")

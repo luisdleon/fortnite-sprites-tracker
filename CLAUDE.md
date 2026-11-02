@@ -27,7 +27,12 @@ https://fortnite.gg/sprites (atributos `data-season`, `data-rarity`,
    variante nueva, agregarla a esa lista **y** a `VARIANT_LABEL` en `app.js`
    (de ahí sale la etiqueta en las tarjetas, en el filtro de variante y en la
    imagen exportada).
-4. **Subir `?v=N`** en los cuatro enlaces de `index.html` cada vez que cambie
+4. **Si llega una temporada nueva** hay que tocar tres lugares además de
+   `data.js`: el chip en `index.html`, `SEASON_LABEL` en `app.js` y una
+   entrada en `ORDEN_VARIANTES` de `tools/ordenar-data.py` (el script falla
+   a propósito si falta). La clave sale de la etiqueta del sitio: "C7 MS" →
+   `C7MS`.
+5. **Subir `?v=N`** en los cuatro enlaces de `index.html` cada vez que cambie
    `data.js`, `app.js` o `style.css`. Sin eso los navegadores sirven la
    versión vieja.
 
