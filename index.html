@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/img/Spiritsapplogo.png">
 <link rel="apple-touch-icon" href="assets/img/Spiritsapplogo.png">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <section class="hero">
@@ -139,17 +139,21 @@
 <div id="avatarModal" class="modal hidden">
   <div class="modal-card">
     <div class="modal-head">
-      <h2>Foto de perfil</h2>
+      <h2>Perfil</h2>
       <button id="avatarCloseBtn" class="btn-modal-close">✕</button>
     </div>
     <input id="avatarSearch" type="search" placeholder="Buscar espíritu..." autocomplete="off">
     <div id="avatarGrid" class="avatar-grid"></div>
     <button id="avatarRemoveBtn" class="btn-reset">Quitar foto</button>
+
+    <div class="zona-peligro">
+      <span class="zona-peligro-nota">Borra todo lo que llevas marcado. No se puede deshacer.</span>
+      <button id="resetBtn" class="btn-peligro">Reiniciar progreso</button>
+    </div>
   </div>
 </div>
 
 <footer class="footer">
-  <button id="resetBtn" class="btn-reset">Reiniciar progreso</button>
   <span class="footer-note">Tu progreso se guarda en tu nombre de jugador</span>
 </footer>
 
@@ -157,8 +161,8 @@
 
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
-<script type="module" src="firebase-init.js?v=20"></script>
-<script src="data.js?v=20"></script>
-<script src="app.js?v=20"></script>
+<script type="module" src="firebase-init.js?v=21"></script>
+<script src="data.js?v=21"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>

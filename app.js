@@ -459,8 +459,25 @@
 
     setupViewToggle();
 
+    // Dos pasos: el primer clic solo arma el boton y se desarma solo a los
+    // 5 segundos, asi un toque por accidente no borra nada.
+    let resetArmado = null;
+
+    function desarmarReset() {
+      clearTimeout(resetArmado);
+      resetArmado = null;
+      resetBtn.classList.remove("confirmando");
+      resetBtn.textContent = "Reiniciar progreso";
+    }
+
     resetBtn.addEventListener("click", () => {
-      if (!confirm("¿Seguro que quieres reiniciar todo el progreso?")) return;
+      if (!resetArmado) {
+        resetBtn.classList.add("confirmando");
+        resetBtn.textContent = "Toca otra vez para borrar todo";
+        resetArmado = setTimeout(desarmarReset, 5000);
+        return;
+      }
+      desarmarReset();
       owned.clear();
       mastered.clear();
       saveSet(STORAGE_KEY, owned);
@@ -470,6 +487,11 @@
       applyFilters();
       scheduleCloudSave();
       showToast("Progreso reiniciado");
+    });
+
+    // Tocar cualquier otra cosa del perfil desarma el boton.
+    avatarModal.addEventListener("click", (e) => {
+      if (resetArmado && !resetBtn.contains(e.target)) desarmarReset();
     });
 
     exportBtn.addEventListener("click", exportAsJpg);
