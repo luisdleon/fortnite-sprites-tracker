@@ -22,7 +22,7 @@
     reaper: "Bounty Hunter",
     tricktreat: "Trick or Treat",
     jeweled: "Fortune",
-    cursed: "Maldito",
+    cursed: "Cursed",
   };
   const SEASON_LABEL = { C7S3: "C7 S3", C7S4: "C7 S4", C7MS: "C7 MS" };
   const RARITY_ORDER = ["MYTHIC", "LEGENDARY", "EPIC", "RARE", "SPECIAL"];
