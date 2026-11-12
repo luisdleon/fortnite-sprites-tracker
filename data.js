@@ -300,6 +300,7 @@ const SPRITES = [
   {"id": "cursed-wayfinder-306", "name": "Cursed Wayfinder", "rarity": "SPECIAL", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_Compass_Cursed_L.webp", "season": "C7MS", "parent": "Wayfinder", "variant": "cursed"},
   {"id": "kelper-291", "name": "Kelper", "rarity": "EPIC", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_UnbotheredFish_L.webp", "season": "C7MS", "parent": "Kelper", "variant": "base"},
   {"id": "fortune-kelper-292", "name": "Fortune Kelper", "rarity": "SPECIAL", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_UnbotheredFish_Jeweled_L.webp", "season": "C7MS", "parent": "Kelper", "variant": "jeweled"},
+  {"id": "cursed-kelper-313", "name": "Cursed Kelper", "rarity": "SPECIAL", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_UnbotheredFish_Cursed_L.webp", "season": "C7MS", "parent": "Kelper", "variant": "cursed"},
   {"id": "sweet-dreams-293", "name": "Sweet Dreams", "rarity": "MYTHIC", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_StarLight_L.webp", "season": "C7MS", "parent": "Sweet Dreams", "variant": "base"},
   {"id": "lil-squibbly-294", "name": "Lil' Squibbly", "rarity": "EPIC", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_SquibblySprite_L.webp", "season": "C7MS", "parent": "Lil' Squibbly", "variant": "base"},
   {"id": "fortune-lil-squibbly-295", "name": "Fortune Lil' Squibbly", "rarity": "SPECIAL", "icon": "assets/icons/T_Icon_BR_Creature_Sprite_SquibblySprite_Jeweled_L.webp", "season": "C7MS", "parent": "Lil' Squibbly", "variant": "jeweled"},
