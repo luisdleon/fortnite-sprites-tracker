@@ -168,6 +168,20 @@
   }
 
   // ---- Sincronización con la nube ----
+
+  // Firestore rechaza por reglas con el mismo tipo de error que usa cuando no
+  // hay red, y llamarle "sin conexión" a todo esconde el problema real.
+  function mensajeDeError(err, cola) {
+    const code = err && err.code;
+    if (code === "permission-denied") {
+      return "La nube rechazó el guardado: " + cola;
+    }
+    if (code === "resource-exhausted") {
+      return "La nube llegó a su límite: " + cola;
+    }
+    return "Sin conexión: " + cola;
+  }
+
   let cloudSaveTimer = null;
 
   function scheduleCloudSave() {
@@ -185,7 +199,7 @@
         })
         .catch((err) => {
           console.error("No se pudo guardar en la nube", err);
-          showToast("Sin conexión: guardado solo en este dispositivo");
+          showToast(mensajeDeError(err, "guardado solo en este dispositivo"));
         });
     }, 800);
   }
@@ -542,7 +556,7 @@
       }
     } catch (err) {
       console.error("No se pudo sincronizar con la nube", err);
-      showToast("Sin conexión: usando datos de este dispositivo");
+      showToast(mensajeDeError(err, "usando datos de este dispositivo"));
     }
   }
 

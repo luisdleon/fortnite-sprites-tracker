@@ -7,6 +7,12 @@ rules_version = '2';
 //   - únicamente esta colección
 //   - únicamente los campos esperados
 //   - un tamaño máximo razonable por documento
+//
+// OJO con los topes de 'owned' y 'mastered': si se quedan por debajo del
+// número de espíritus que existen, el jugador deja de poder guardar en cuanto
+// pasa ese número, y la app solo alcanza a decir "sin conexión". Paso con el
+// tope viejo de 300 al llegar a 314 espíritus. Por eso ahora hay mucho aire:
+// 2000 ids de ~30 bytes son ~60 KB, lejos del límite de 1 MB por documento.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /spiritsTrackerUsers/{userId} {
@@ -17,8 +23,8 @@ service cloud.firestore {
                       )
                    && request.resource.data.owned is list
                    && request.resource.data.mastered is list
-                   && request.resource.data.owned.size() <= 300
-                   && request.resource.data.mastered.size() <= 300
+                   && request.resource.data.owned.size() <= 2000
+                   && request.resource.data.mastered.size() <= 2000
                    && (!('friends' in request.resource.data.keys())
                         || (request.resource.data.friends is list
                             && request.resource.data.friends.size() <= 100))
